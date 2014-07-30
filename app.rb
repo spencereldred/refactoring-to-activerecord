@@ -60,12 +60,13 @@ class App < Sinatra::Application
   end
 
   delete "/users/:id" do
-    delete_sql = <<-SQL
-    DELETE FROM users
-    WHERE id = #{params[:id]}
-    SQL
-
-    @database_connection.sql(delete_sql)
+    # delete_sql = <<-SQL
+    # DELETE FROM users
+    # WHERE id = #{params[:id]}
+    # SQL
+    #
+    # @database_connection.sql(delete_sql)
+    User.destroy(params[:id])
 
     redirect "/"
   end
@@ -181,12 +182,7 @@ class App < Sinatra::Application
 
   def current_user
     if session[:user_id]
-      select_sql = <<-SQL
-      SELECT * FROM users
-      WHERE id = #{session[:user_id]}
-      SQL
-
-      @database_connection.sql(select_sql).first
+      User.find(session[:user_id])
     else
       nil
     end
