@@ -1,0 +1,32 @@
+<p>Welcome, <%= current_user["username"] %></p>
+
+<form action="/sessions" method="post">
+  <input type="hidden" name="_method" value="delete"/>
+  <input type="submit" value="Sign Out"/>
+</form>
+
+<h2>Users</h2>
+
+<ul class="user-list">
+  <% users.each do |user| %>
+    <li>
+      <%= user["username"] %>
+      <form method="post" action="/users/<%= user["id"] %>">
+        <input type="hidden" name="_method" value="delete" />
+        <input type="submit" value="Delete" />
+      </form>
+    </li>
+  <% end %>
+</ul>
+
+<h2>Fish</h2>
+
+<a href="/fish/new">New Fish</a>
+
+<ul class="fish-list">
+  <% fish_list.each do |fish| %>
+    <li>
+      <a href="/fish/<%= fish["id"] %>"><%= fish["name"] %></a>
+    </li>
+  <% end %>
+</ul>
