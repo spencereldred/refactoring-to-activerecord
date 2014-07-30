@@ -2,6 +2,7 @@ require "sinatra"
 require "gschool_database_connection"
 require "rack-flash"
 require "./models/user"
+require "./models/fish"
 
 class App < Sinatra::Application
   enable :sessions
@@ -17,8 +18,7 @@ class App < Sinatra::Application
 
     if current_user
       users = User.where.not(id: "#{user["id"]}")
-      # users = @database_connection.sql("SELECT * FROM users WHERE id != #{user["id"]}")
-      fish = @database_connection.sql("SELECT * FROM fish WHERE user_id = #{current_user["id"]}")
+      fish = Fish.where(user_id: "#{current_user["id"]}")
       erb :signed_in, locals: {current_user: user, users: users, fish_list: fish}
     else
       erb :signed_out
@@ -60,12 +60,6 @@ class App < Sinatra::Application
   end
 
   delete "/users/:id" do
-    # delete_sql = <<-SQL
-    # DELETE FROM users
-    # WHERE id = #{params[:id]}
-    # SQL
-    #
-    # @database_connection.sql(delete_sql)
     User.destroy(params[:id])
 
     redirect "/"
