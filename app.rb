@@ -3,6 +3,7 @@ require "gschool_database_connection"
 require "rack-flash"
 require "./models/user"
 require "./models/fish"
+require "pry"
 
 class App < Sinatra::Application
   enable :sessions
@@ -10,7 +11,7 @@ class App < Sinatra::Application
 
   def initialize
     super
-    @database_connection = GschoolDatabaseConnection::DatabaseConnection.establish(ENV["RACK_ENV"])
+    GschoolDatabaseConnection::DatabaseConnection.establish(ENV["RACK_ENV"])
   end
 
   get "/" do
@@ -19,6 +20,7 @@ class App < Sinatra::Application
     if current_user
       users = User.where.not(id: "#{user["id"]}")
       fish = Fish.where(user_id: "#{current_user["id"]}")
+      # binding.pry
       erb :signed_in, locals: {current_user: user, users: users, fish_list: fish}
     else
       erb :signed_out
